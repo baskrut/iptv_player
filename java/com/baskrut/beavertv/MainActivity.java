@@ -109,11 +109,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         if (indLook == 1){
-            inflateGrid();
-            Log.d(TAG, "inflatGrid in onCreate");
-        }else{
             inflateList();
-            Log.d(TAG, "inflatList in onCreate");
+            Log.d(TAG, "inflateGrid in onCreate");
+        }else{
+            inflateGrid();
+            Log.d(TAG, "inflateList in onCreate");
         }
 
     }
@@ -123,27 +123,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (Build.VERSION.SDK_INT > 21){
 
-            Log.d(TAG, "uild.VERSION.SDK_INT > 21");
+            Log.d(TAG, "build.VERSION.SDK_INT > 21");
 
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED){
                 Log.d(TAG, "если разрешения нет");
-                //  intentCatchFileFromStorage();
 
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)){
                     Log.d(TAG, "если разрешение НЕ дали с первого раза кидаем тост");
-                    Toast.makeText(this, getString(R.string.needPermission), Toast.LENGTH_LONG);
-
+                    Toast.makeText(this, getString(R.string.needPermission), Toast.LENGTH_LONG).show();
                     ActivityCompat.requestPermissions(this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE);
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
+
                 }else{
-                    // No explanation needed; request the permission
                     Log.d(TAG, "вызываем ActivityCompat.requestPermissions(this,\n" +
                             "                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},\n" +
                             "                            MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE);");
@@ -151,14 +146,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     ActivityCompat.requestPermissions(this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE);
-
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
                 }
-            }else{                                  // TODO: 08.01.2019 этого else небыло
-                intentCatchFileFromStorage();       //
-            }                                       //
+            }else{
+                intentCatchFileFromStorage();
+            }
 
         }else{
 
@@ -173,30 +164,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.d(TAG, "выполняется онРек..пер..ресулт");
         switch (requestCode){
             case MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE:{
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     Log.d(TAG, "если разрешение дали вызываем интент");
                     intentCatchFileFromStorage();
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+
                 }else{
                     Log.d(TAG, "если разрешение НЕ дали кидаем тост");
                     Toast.makeText(this, getString(R.string.needPermission), Toast.LENGTH_LONG);
 
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
-//                return;
-            }
 
-            // other 'case' lines to check for other
-            // permissions this app might request.
+            }
         }
     }
 
     void intentCatchFileFromStorage(){
-        // onRequestPermission ();//todo проверить этот метод для рантайм пермиссион
         try{
             Intent intentGetFileFromStorage = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intentGetFileFromStorage.addCategory(Intent.CATEGORY_OPENABLE);
@@ -274,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             Log.d(TAG, "нажали кнопку вызвали онРеквестПермисион");
 
-//            intentCatchFileFromStorage ();//todo было не закоментированно
+
             onRequestPermission();
 
             Log.d(TAG, "вернулись в кнопку после онРеквестПермисион");
@@ -288,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (v.getId() == R.id.ibGrid){
             Log.d(TAG, "нажали кнопку грид");
             SharedPreferences.Editor editorGrid = shPrLook.edit();
-            editorGrid.putInt(LOOK_ID, 1);
+            editorGrid.putInt(LOOK_ID, 0);
             editorGrid.apply();
             if (shPrLook.contains(LOOK_ID)){
                 indLook = shPrLook.getInt(LOOK_ID, 1);
@@ -299,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (v.getId() == R.id.ibList){
             Log.d(TAG, "нажали кнопку лист");
             SharedPreferences.Editor editorList = shPrLook.edit();
-            editorList.putInt(LOOK_ID, 0);
+            editorList.putInt(LOOK_ID, 1);
             editorList.apply();
             if (shPrLook.contains(LOOK_ID)){
                 indLook = shPrLook.getInt(LOOK_ID, 100);
@@ -349,16 +332,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             reader.close();
 
-            if (shPrLook.contains(LOOK_ID)){  //todo этих трёх блоков сдесь не было
+            if (shPrLook.contains(LOOK_ID)){
                 indLook = shPrLook.getInt(LOOK_ID, 10);
             }
 
             if (indLook == 1){
                 inflateGrid();
-                Log.d(TAG, "inflatGrid in onCreate");
+                Log.d(TAG, "inflateGrid in onCreate");
             }else{
                 inflateList();
-                Log.d(TAG, "inflatList in onCreate");
+                Log.d(TAG, "inflateList in onCreate");
             }
 
         }catch (FileNotFoundException e){
@@ -455,12 +438,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent playIntent = new Intent(Intent.ACTION_VIEW);
 
         if (ibList.getSystemUiVisibility() == 0){//todo дописал эту строчку вместо проверки через шаред преференс
-       /* if ( shPrLook.contains ( LOOK_ID ) ) {
-            indLook = shPrLook.getInt ( LOOK_ID, 10 );
-        }
-        if ( indLook == 1 ) {*/
+
             Log.d(TAG, "if (ibList.getSystemUiVisibility () == 0)");
-            if (playListClassParser.getLogo(/*i*/position).equals(ImageAdapter.aarImageAdapter.get(position))){
+            if (playListClassParser.getLogo(position).equals(ImageAdapter.aarImageAdapter.get(position))){
 
                 playIntent.setDataAndType(Uri.parse(playListClassParser.getLink((position/*i*/))), "video/*");
                 if (playIntent.resolveActivity(getPackageManager()) != null){
@@ -469,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
 
-        }else if (playListClassParser.getName(/*i*/position).equals(arrChanelName.get(position))){
+        }else if (playListClassParser.getName(position).equals(arrChanelName.get(position))){
             Log.d(TAG, "if (ibList.getSystemUiVisibility () != 0)");
             Log.d(TAG, "вызываем интент+ + + + + + + + + + + + + + + +" + playListClassParser.getName((/*i*/position)) + " " + Integer.toString(/*i*/position));
             playIntent.setDataAndType(Uri.parse(playListClassParser.getLink((/*i*/position))), "video/*");
