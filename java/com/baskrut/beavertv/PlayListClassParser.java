@@ -33,7 +33,7 @@ public class PlayListClassParser {
         return logo;
     }
 
-    //protected int getKey(int i){
+    //protected int getKey(int i){//todo for playlist wits authorization by key,
     //   String playList = arrAllChanel.get(i);
     //    if(playList.contains("&key")){
     //       number = Integer.parseInt(playList.substring(playList.indexOf("channel="),playList.indexOf("&key")));
@@ -80,7 +80,7 @@ public class PlayListClassParser {
         Log.d ("myLog", " link = " + link);
         return link;
     }
-
+//todo for lists wits type separations
     /*protected String getType(String playList){ //при создании списка типов из метода  private void createArrAllChannel() приходит строка
         //String playList = arrAllChanel.get(i);
       *//*  int i=arrAllChanel.indexOf(playList);*//*
